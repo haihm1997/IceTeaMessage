@@ -9,5 +9,11 @@ target 'IceTeaMessage' do
   pod 'Firebase/Core'
 #  pod 'FirebaseUI'
   pod 'SVProgressHUD'
-  
+  pod "BSImagePicker", "~> 2.8"
+  pod 'Firebase/Auth'
+  pod 'GoogleSignIn'
+  pod 'Bolts'
+  pod 'FBSDKCoreKit'
+  pod 'FBSDKLoginKit'
+  pod 'SwiftyUserDefaults', :git => "https://github.com/radex/SwiftyUserDefaults.git"
 end
