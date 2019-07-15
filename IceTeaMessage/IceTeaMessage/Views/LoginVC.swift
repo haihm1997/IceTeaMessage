@@ -10,12 +10,19 @@ import UIKit
 import Firebase
 import FBSDKLoginKit
 import FirebaseAuth
+import FirebaseDatabase
 
 class LoginVC: UIViewController {
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+    }
     
     @IBAction func facebookLogin(sender: UIButton) {
         let fbLoginManager = FBSDKLoginManager()
         fbLoginManager.logIn(withReadPermissions: ["public_profile", "email"], from: self) { (result, error) in
+            self.showLoading()
             if let error = error {
                 print("Failed to login: \(error.localizedDescription)")
                 return
@@ -27,7 +34,6 @@ class LoginVC: UIViewController {
             }
             
             let credential = FacebookAuthProvider.credential(withAccessToken: accessToken.tokenString)
-            
             Auth.auth().signInAndRetrieveData(with: credential, completion: { (authData, error) in
                 if let error = error {
                     print("Login error: \(error.localizedDescription)")
@@ -38,19 +44,51 @@ class LoginVC: UIViewController {
                     return
                 }
                 
-                if let viewController = self.storyboard?.instantiateViewController(withIdentifier: "MainVC") {
-                    let nav = UINavigationController(rootViewController: viewController)
-                    UIApplication.shared.keyWindow?.rootViewController = nav
-                    self.dismiss(animated: true, completion: nil)
-                }
+                self.getUserInfor()
             })
 
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
+    func getUserInfor() {
+        if FBSDKAccessToken.current() != nil {
+            let token = FBSDKAccessToken.current()?.tokenString
+            let request = FBSDKGraphRequest(graphPath: "me", parameters: ["fields":"email,name"], tokenString: token, version: nil, httpMethod: "GET")
+            
+            request?.start(completionHandler: { (test, result, error) in
+                self.dismissLoading()
+                if(error == nil)
+                {
+                    guard let data = result as? [String: Any] else {
+                        return
+                    }
+                    self.loadUserInfo(data)
+                }
+                self.openMainScreen()
+            })
+        }
+    }
+    
+    private func loadUserInfo(_ data: [String: Any]) {
+        let fbId  = data["id"] as? String ?? ""
+        let name = data["name"] as? String ?? ""
+        let avatarUrl = "http://graph.facebook.com/\(fbId)/picture?type=large"
+        let authId = Auth.auth().currentUser?.uid
+        let user = User(id: authId ?? "", avatar: avatarUrl, name: name, lastMessage: "")
+        UserDefaults.standard.save(customObject: user, inKey: UserDefaults.DefaultKey.userInfo)
+        pushUserInfor(user: user)
+    }
+    
+    private func pushUserInfor(user: User) {
+        let ref = Database.database().reference()
+        ref.child(Constants.FBKey.usersKey).child(user.id).setValue(user.representationData)
+    }
+    
+    private func openMainScreen() {
+        if let viewController = self.storyboard?.instantiateViewController(withIdentifier: "MainVC") {
+            UIApplication.shared.keyWindow?.rootViewController = viewController
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
 }

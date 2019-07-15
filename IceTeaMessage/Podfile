@@ -16,4 +16,7 @@ target 'IceTeaMessage' do
   pod 'FBSDKCoreKit'
   pod 'FBSDKLoginKit'
   pod 'SwiftyUserDefaults', :git => "https://github.com/radex/SwiftyUserDefaults.git"
+  pod 'Firebase/Analytics'
+  pod 'Firebase/Database'
+  pod 'AlamofireImage', '~> 3.5'
 end

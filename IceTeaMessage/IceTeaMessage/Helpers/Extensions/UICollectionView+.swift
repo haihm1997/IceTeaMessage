@@ -22,10 +22,12 @@ extension UICollectionView {
                 selectItem(at: indexPath, animated: true, scrollPosition: [])
         }
     }
+    
     /// Deselects all selected cells.
     func deselectAll(animated: Bool) {
         indexPathsForSelectedItems?.forEach({ (indexPath) in
             deselectItem(at: indexPath, animated: animated)
         })
     }
+    
 }

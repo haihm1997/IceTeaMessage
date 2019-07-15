@@ -19,6 +19,7 @@ class BaseVC: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.tabBarController?.tabBar.isHidden = !isControllerWithTabBar()
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardHiding), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
@@ -57,6 +58,10 @@ class BaseVC: UIViewController {
                             self.view.layoutIfNeeded() },
                            completion: nil)
         }
+    }
+    
+    private func isControllerWithTabBar() -> Bool {
+        return self is SettingVC || self is HomeVC || self is FriendsVC
     }
     
 }

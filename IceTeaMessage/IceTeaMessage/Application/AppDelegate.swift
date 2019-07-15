@@ -16,10 +16,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         FirebaseApp.configure()
         FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+        screenSwitch()
         return true
     }
 
@@ -49,6 +49,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let handled = FBSDKApplicationDelegate.sharedInstance().application(app, open: url, options: options)
         
         return handled
+    }
+    
+    func screenSwitch() {
+        if Auth.auth().currentUser != nil {
+            goToMainScreen()
+        } else {
+            goToLoginScreen()
+        }
+    }
+    
+    func goToMainScreen() {
+        let mainVC = UIViewController().instantiateViewController(fromStoryboard: .main, ofType: MainVC.self)
+        self.window?.rootViewController = mainVC
+        self.window?.makeKeyAndVisible()
+    }
+    
+    func goToLoginScreen() {
+        let loginVC = UIViewController().instantiateViewController(fromStoryboard: .main, ofType: LoginVC.self)
+        let nav = UINavigationController(rootViewController: loginVC)
+        self.window?.rootViewController = nav
+        self.window?.makeKeyAndVisible()
     }
 
 }
