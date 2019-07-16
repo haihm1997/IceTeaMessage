@@ -23,6 +23,8 @@ class SettingVC: BaseVC {
     @IBAction func logoutButtonTapped(_ sender: Any) {
         do {
             try Auth.auth().signOut()
+            UserDefaults.standard.save(customObject: User(), inKey: UserDefaults.DefaultKey.userInfo)
+            Constants.Shared.savedUser = User()
             let loginVC = self.instantiateViewController(fromStoryboard: .main, ofType: LoginVC.self)
             UIApplication.shared.windows.first?.rootViewController = loginVC
         } catch {

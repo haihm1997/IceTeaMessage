@@ -10,6 +10,7 @@ import UIKit
 import Photos
 import BSImagePicker
 
+
 class DetailMessageVC: BaseVC {
     
     @IBOutlet weak var typingSpaceBottomConstraint: NSLayoutConstraint!
@@ -21,7 +22,18 @@ class DetailMessageVC: BaseVC {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        viewModel.getRoomId {
+            self.viewModel.observeMessage {
+                let indexPath = [IndexPath(row: self.viewModel.messages.count - 1, section: 0)]
+                self.tableView.insertRows(at: indexPath, with: UITableView.RowAnimation.automatic)
+                self.scrollToLastMessage()
+            }
+        }
         configTableView()
+    }
+    
+    deinit {
+        viewModel.removeObserver()
     }
     
     func configTableView() {
@@ -32,6 +44,7 @@ class DetailMessageVC: BaseVC {
         tableView.register(UINib(nibName: TextMessCell.identifier, bundle: nil),
                            forCellReuseIdentifier: TextMessCell.identifier)
         tableView.register(UINib(nibName: ImageMessCell.identifier, bundle: nil), forCellReuseIdentifier: ImageMessCell.identifier)
+        
     }
     
     override func keyBoardShowing(keyboardHeight: CGFloat) {
@@ -48,7 +61,7 @@ class DetailMessageVC: BaseVC {
         let sendContent = sendTextFeild.text ?? ""
         if !sendContent.isEmpty {
             let sendMessage = Message(avatar: "avatar", content: sendContent)
-            viewModel.messages.append(sendMessage)
+            viewModel.sendMessage(message: sendMessage)
             sendTextFeild.text = ""
             tableView.reloadData()
             scrollToLastMessage()
@@ -57,7 +70,9 @@ class DetailMessageVC: BaseVC {
     
     func scrollToLastMessage() {
         let indexPath = IndexPath(item: viewModel.messages.count - 1, section: 0)
-        self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+        if viewModel.messages.count > 2 {
+            self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+        }
     }
     
     @IBAction func takePhotoButtonTapped(_ sender: Any) {

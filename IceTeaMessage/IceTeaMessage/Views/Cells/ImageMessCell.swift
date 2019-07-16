@@ -28,11 +28,11 @@ class ImageMessCell: UITableViewCell {
         receiverImage.isHidden = !message.isReceiver
         senderImage.isHidden = message.isReceiver
         if message.isReceiver {
-            receiverAvatar.image = UIImage(named: message.avatar)
-            receiverImage.image = UIImage(named: message.image)
+            receiverAvatar.imageFromServerURL(message.avatar, placeHolder: UIImage(named: "avatar"))
+            receiverImage.imageFromServerURL(message.image, placeHolder: UIImage(named: "avatar"))
         } else {
-            senderAvatar.image = UIImage(named: message.avatar)
-            senderImage.image = UIImage(named: message.image)
+            senderAvatar.imageFromServerURL(message.avatar, placeHolder: UIImage(named: "avatar"))
+            senderImage.imageFromServerURL(message.image, placeHolder: UIImage(named: "avatar"))
         }
     }
     

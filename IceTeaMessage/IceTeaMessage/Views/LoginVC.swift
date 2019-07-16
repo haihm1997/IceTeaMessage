@@ -76,6 +76,7 @@ class LoginVC: UIViewController {
         let authId = Auth.auth().currentUser?.uid
         let user = User(id: authId ?? "", avatar: avatarUrl, name: name, lastMessage: "")
         UserDefaults.standard.save(customObject: user, inKey: UserDefaults.DefaultKey.userInfo)
+        Constants.loadShared()
         pushUserInfor(user: user)
     }
     

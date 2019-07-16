@@ -27,9 +27,9 @@ class TextMessCell: UITableViewCell {
         avatarSenderImage.isHidden = message.isReceiver
         avatarReceiverImage.isHidden = !message.isReceiver
         if message.isReceiver {
-            avatarReceiverImage.image = UIImage(named: message.avatar)
+            avatarReceiverImage.imageFromServerURL(message.avatar, placeHolder: UIImage(named: "avatar"))
         } else {
-            avatarSenderImage.image = UIImage(named: message.avatar)
+            avatarSenderImage.imageFromServerURL(message.avatar, placeHolder: UIImage(named: "avatar"))
         }
        
     }

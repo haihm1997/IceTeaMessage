@@ -17,7 +17,9 @@ class FriendsVC: BaseVC {
     override func viewDidLoad() {
         super.viewDidLoad()
         configTableView()
+        showLoading()
         viewModel.observeUsersDatabase {
+            self.dismissLoading()
             self.tableView.reloadData()
         }
     }
@@ -46,7 +48,9 @@ extension FriendsVC: UITableViewDataSource {
                 return
             }
             let user = self?.viewModel.friendList[indexPath.row]
-            
+            let detailMessageVC = weakSelf.instantiateViewController(fromStoryboard: .main, ofType: DetailMessageVC.self)
+            detailMessageVC.viewModel.choosedUser = user ?? User()
+            weakSelf.navigationController?.pushViewController(detailMessageVC, animated: true)
         }
         return cell ?? UITableViewCell()
     }

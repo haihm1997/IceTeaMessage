@@ -15,6 +15,7 @@ class User: NSObject, Codable {
     var avatar = ""
     var name = ""
     var lastMessage = ""
+    var chatedRooms: [String] = [String]()
     
     override init() {
         super.init()

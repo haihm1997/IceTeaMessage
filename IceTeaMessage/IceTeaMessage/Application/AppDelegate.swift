@@ -54,6 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func screenSwitch() {
         if Auth.auth().currentUser != nil {
             goToMainScreen()
+            Constants.loadShared()
         } else {
             goToLoginScreen()
         }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FirebaseDatabase
 
 class Message: NSObject {
     
@@ -28,6 +29,31 @@ class Message: NSObject {
         self.image = image
         self.isImageMessage = true
         self.isReceiver = isReceiver
+    }
+    
+    init(snap: DataSnapshot) {
+        let messageDict = snap.value as? [String: Any] ?? [:]
+        self.avatar = messageDict["avatar"] as? String ?? ""
+        self.content = messageDict["content"] as? String ?? ""
+        self.image = messageDict["image"] as? String ?? ""
+        let senderUser = messageDict["sendedUser"] as? String ?? ""
+        self.isReceiver = senderUser != Constants.Shared.savedUser.id
+        self.isImageMessage = !self.image.isEmpty
+    }
+    
+}
+
+extension Message {
+    
+    var representData: [String: Any] {
+        let data: [String: Any] = [
+            "avatar": Constants.Shared.savedUser.avatar,
+            "content": content,
+            "image": image,
+            "sendedUser": Constants.Shared.savedUser.id
+        ]
+        
+        return data
     }
     
 }

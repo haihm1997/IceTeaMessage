@@ -16,6 +16,7 @@ struct Constants {
     
     struct FBKey {
         static let usersKey = "Users"
+        static let channels = "Channels"
     }
     
 }
